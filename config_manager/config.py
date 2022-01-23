@@ -37,11 +37,13 @@ def parse_env(config: Config, prefix: Optional[str] = None):
 def parse_arguments(config: Config, parser_description: str):
     parser = ArgumentParser(parser_description)
     for variable_name, variable_type in config.__annotations__.items():
-        parser.add_argument(f"--{variable_name}", type=variable_type, required=True)
+        parser.add_argument(f"--{variable_name}", type=variable_type, required=False)
 
     args, unknown = parser.parse_known_args()
     for variable_name in config.__annotations__.keys():
-        setattr(config, variable_name, getattr(args, variable_name))
+        parsed_value = getattr(args, variable_name)
+        if parsed_value:
+            setattr(config, variable_name, parsed_value)
 
 
 def parse_json(config: Config, json_path: str):
