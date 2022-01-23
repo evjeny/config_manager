@@ -2,7 +2,6 @@ from argparse import ArgumentParser
 import json
 import os
 import sys
-import tempfile
 
 from config_manager.config import Config, parse_env, parse_arguments, parse_json
 
