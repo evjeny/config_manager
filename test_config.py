@@ -26,6 +26,18 @@ def _check_parsed_arguments(config: Config):
         assert getattr(config, name) == value, "config variable wasn't assigned correctly"
 
 
+def test_predefined():
+    class PredefinedConfig(Config):
+        name: str = target_values["name"]
+        age: int = target_values["age"]
+        happiness: float = target_values["happiness"]
+        is_cool: bool = target_values["is_cool"]
+
+    config = PredefinedConfig()
+    _check_parsed_arguments(config)
+    print("Predefined test passed")
+
+
 def test_environment():
     for prefix in [None, "super_long_prefix_omagad_", "test_"]:
         for name, value in target_values.items():
@@ -67,6 +79,7 @@ def test_json(temp_filename: str = "_hidden_config.json"):
 
 if __name__ == "__main__":
     parser = ArgumentParser("Test ConfigManager")
+    parser.add_argument("--test_predefined", action="store_true", help="test predefined config variables")
     parser.add_argument("--test_env", action="store_true", help="test parsing of environment variables")
     parser.add_argument("--test_arguments", action="store_true", help="test parsing of script arguments")
     parser.add_argument("--test_json", action="store_true", help="test parsing of json config")
@@ -74,10 +87,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.all:
+        test_predefined()
         test_environment()
         test_arguments()
         test_json()
     else:
+        if args.test_predefined:
+            test_predefined()
         if args.test_env:
             test_environment()
         if args.test_arguments:
