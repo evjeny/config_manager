@@ -1,5 +1,11 @@
 # config_manager
-Configuration manger
+Configuration manager for parsing from different sources
+
+## Installation
+
+```bash
+python -m pip install config-manager-evjeny
+```
 
 ## Usage
 
