@@ -1,11 +1,12 @@
 from config_manager import config
-from config_manager.config_types import BoolType
+from config_manager.config_types import BoolType, ListType
 
 
 class TestConfig(config.Config):
     name: str
     age: int
     is_useful: BoolType = False
+    parts: ListType[float]
 
 
 my_config = TestConfig()
