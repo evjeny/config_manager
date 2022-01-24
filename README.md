@@ -1,4 +1,9 @@
 # config_manager
+
+![Tests](https://github.com/evjeny/config_manager/actions/workflows/python-app.yml/badge.svg)
+![Release](https://img.shields.io/github/v/release/evjeny/config_manager)
+[![PyPI](https://img.shields.io/badge/PyPI-config_manager_evjeny-blue)](https://pypi.org/project/config-manager-evjeny)
+
 Configuration manager for parsing from different sources
 
 ## Installation
