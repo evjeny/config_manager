@@ -29,7 +29,7 @@ print(my_config)
 If we run it:
 
 ```bash
-test_config_age=33 python example_parser.py --name hello
+test_config_age=33 python example_parser.py --name hello --is_useful false
 ```
 
 It will output something like and all the *primitive* types will be parsed correctly:

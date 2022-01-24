@@ -1,10 +1,11 @@
 from config_manager import config
+from config_manager.config_types import BoolType
 
 
 class TestConfig(config.Config):
     name: str
     age: int
-    is_useful: bool = False
+    is_useful: BoolType = False
 
 
 my_config = TestConfig()
