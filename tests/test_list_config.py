@@ -1,13 +1,16 @@
-import os
-import sys
-from typing import List, Tuple, Union
+"""Test list types provided by config_manager"""
+
+from typing import List, Tuple, Any
 
 from config_manager.config import Config
 from config_manager.config_types import BoolType, ListType
+
 from tests.base_test import BaseTest
 
 
-class ListConfig(Config):
+class ListConfig(Config):  # pylint: disable=too-few-public-methods
+    """Config with some list types with different item types"""
+
     int_array: ListType[int]
     str_array: ListType[str]
     float_array: ListType[float]
@@ -15,6 +18,8 @@ class ListConfig(Config):
 
 
 class TestListTypes(BaseTest):
+    """Test case for list parsers"""
+
     def setUp(self) -> None:
         self._config_targets: List[Tuple[Config, dict]] = [
             (
@@ -23,43 +28,29 @@ class TestListTypes(BaseTest):
                     "int_array": [1, 2, 3],
                     "str_array": ["empty?", "", "1239"],
                     "float_array": [0.5, -999.23],
-                    "bool_array": [True, False, True]
-                }
+                    "bool_array": [True, False, True],
+                },
             ),
             (
                 ListConfig(),
-                {
-                    "int_array": [],
-                    "str_array": [],
-                    "float_array": [],
-                    "bool_array": []
-                }
+                {"int_array": [], "str_array": [], "float_array": [], "bool_array": []},
             ),
         ]
 
     @staticmethod
-    def _environment_variables_setuper(
-        _: Config,
-        target_values: dict,
-        prefix: Union[None, str]
-    ):
-        for name, value in target_values.items():
-            env_name = prefix + name if prefix else name
-            if isinstance(value, list):
-                env_value = ",".join(map(str, value))
-            else:
-                env_value = str(value)
-            os.environ[env_name] = env_value
-        print(os.environ)
+    def _append_to_env(environ, name: str, value):
+        if isinstance(value, list):
+            env_value = ",".join(map(str, value))
+        else:
+            env_value = str(value)
+
+        environ[name] = env_value
 
     @staticmethod
-    def _arguments_variables_setuper(_: Config, target_values: dict):
-        sys.argv = sys.argv[:1]
-        for variable, value in target_values.items():
-            sys.argv.append(f"--{variable}")
-            if isinstance(value, list):
-                for item in value:
-                    sys.argv.append(str(item))
-            else:
-                sys.argv.append(f"{value}")
-        print(sys.argv)
+    def _append_to_argv(argv: list, name: str, value: Any):
+        argv.append(f"--{name}")
+        if isinstance(value, list):
+            for item in value:
+                argv.append(str(item))
+        else:
+            argv.append(f"{value}")

@@ -15,19 +15,19 @@ Then we can parse variables from different sources.
 For example, this is [example_parser.py](example_parser.py):
 
 ```python
-from config_manager import config
+from config_manager.config import Config
 
 
-class TestConfig(config.Config):
+class TestConfig(Config):
     name: str
     age: int
     is_useful: bool = False
 
 
-my_config = TestConfig()
-config.parse_env(my_config, prefix="test_config_")
-config.parse_json(my_config, json_path="test_config.json")
-config.parse_arguments(my_config, "TestConfig parser")
+my_config = TestConfig() \
+    .parse_env(prefix="test_config_") \
+    .parse_json(json_path="test_config.json") \
+    .parse_arguments("TestConfig parser")
 
 print(my_config)
 ```
