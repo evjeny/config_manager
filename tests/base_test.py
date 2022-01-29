@@ -28,9 +28,10 @@ class BaseTest(unittest.TestCase):
         self,
         variables_setuper: Callable[[Config, dict], None],
         parser: Callable[[Config], None],
+        parser_name: str = "default parser",
     ):
-        for i, (config_object, target_values) in enumerate(self._config_targets):
-            with self.subTest(i=i):
+        for config_object, target_values in self._config_targets:
+            with self.subTest(target_values=target_values, parser_name=parser_name):
                 variables_setuper(config_object, target_values)
                 parser(config_object)
                 self._check_parsed_arguments(config_object, target_values)
@@ -47,7 +48,9 @@ class BaseTest(unittest.TestCase):
     def test_predefined(self):
         """Test predefined parser"""
         self._check_multiple_targets(
-            self._predefined_variables_setuper, self._predefined_parser
+            self._predefined_variables_setuper,
+            self._predefined_parser,
+            "predefined_parser",
         )
 
     @staticmethod
@@ -71,6 +74,7 @@ class BaseTest(unittest.TestCase):
             self._check_multiple_targets(
                 partial(self._environment_variables_setuper, prefix=env_prefix),
                 partial(parse_env, prefix=env_prefix),
+                "env_parser",
             )
 
     @staticmethod
@@ -92,6 +96,7 @@ class BaseTest(unittest.TestCase):
         self._check_multiple_targets(
             self._arguments_variables_setuper,
             partial(parse_arguments, parser_description="Test parser"),
+            "arguments_parser",
         )
 
     @staticmethod
@@ -108,6 +113,7 @@ class BaseTest(unittest.TestCase):
         self._check_multiple_targets(
             partial(self._json_variables_setuper, filename=self._json_filename),
             partial(parse_json, json_path=self._json_filename),
+            "json_parser",
         )
 
         if os.path.exists(self._json_filename):

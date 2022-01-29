@@ -3,18 +3,18 @@
 from typing import List, Tuple, Any
 
 from config_manager.config import Config
-from config_manager.config_types import BoolType, ListType
+from config_manager.variable_parsers import ListType
 
 from tests.base_test import BaseTest
 
 
-class ListConfig(Config):  # pylint: disable=too-few-public-methods
+class ListConfig(Config):
     """Config with some list types with different item types"""
 
     int_array: ListType[int]
     str_array: ListType[str]
     float_array: ListType[float]
-    bool_array: ListType[BoolType]
+    bool_array: ListType[bool]
 
 
 class TestListTypes(BaseTest):
@@ -40,7 +40,7 @@ class TestListTypes(BaseTest):
     @staticmethod
     def _append_to_env(environ, name: str, value):
         if isinstance(value, list):
-            env_value = ",".join(map(str, value))
+            env_value = "[" + ",".join(map(str, value)) + "]"
         else:
             env_value = str(value)
 

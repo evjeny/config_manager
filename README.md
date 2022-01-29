@@ -16,12 +16,16 @@ For example, this is [example_parser.py](example_parser.py):
 
 ```python
 from config_manager.config import Config
+from config_manager.variable_parsers import ListType
 
 
 class TestConfig(Config):
+    """Config example with some variables of different types"""
+
     name: str
     age: int
     is_useful: bool = False
+    parts: ListType[float]
 
 
 my_config = TestConfig() \
@@ -71,7 +75,7 @@ Variable cast to `BoolType` will get `True` value in one of these cases:
 * variable is numeric, and it's value is `1` (or `1.0`)
 
 ```python
-from config_manager.config_types import BoolType
+from config_manager.variable_parsers import BoolType
 
 assert BoolType("yes") == True
 assert BoolType("yES") == True
@@ -98,7 +102,7 @@ It can be used with any of primitives, so every element will be cast
 to primitive's type. For example:
 
 ```python
-from config_manager.config_types import ListType
+from config_manager.variable_parsers import ListType
 
 assert ListType[int](["1", "2", "3"]) == [1, 2, 3]
 assert ListType[str]([1.0, -213.5122, 52.123]) == ["1.0", "-213.5122", "52.123"]

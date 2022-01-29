@@ -3,7 +3,6 @@
 from typing import List, Tuple
 
 from config_manager.config import Config
-from config_manager.config_types import BoolType
 from tests.base_test import BaseTest
 
 
@@ -13,7 +12,7 @@ class BasicConfig(Config):
     name: str
     age: int
     happiness: float
-    is_cool: BoolType
+    is_cool: bool
 
 
 class TestBasicTypes(BaseTest):
