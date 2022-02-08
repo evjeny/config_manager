@@ -53,10 +53,7 @@ class Config(BasicParser):
         """
         parser = ArgumentParser(parser_description)
         for variable_name, variable_type in self.__annotations__.items():
-            if isinstance(variable_type, ListType):
-                parser.add_argument(f"--{variable_name}", nargs="*")
-            else:
-                parser.add_argument(f"--{variable_name}", required=False)
+            parser.add_argument(f"--{variable_name}", required=False)
 
         args, _ = parser.parse_known_args()
         for variable_name, variable_type in self.__annotations__.items():

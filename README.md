@@ -47,7 +47,7 @@ If we run it:
 test_config_age=33 python example_parser.py \
   --name hello \
   --is_useful false \
-  --parts 0.25 0.5 0.75
+  --parts "[0.25, 0.5, 0.75]"
 ```
 
 It will output something like and all the *primitive* types will be parsed correctly:
@@ -65,55 +65,57 @@ parts = [0.25, 0.5, 0.75]
 
 For `str`, `int` and `float` casting is the same as builtin functions.
 
-### `BoolType`
+### `bool`
 
 Generally all not empty containers (even string `"false"`)
 cast to `bool` would return `True`.
 
-Thus, there is custom type `BoolType`.
-Variable cast to `BoolType` will get `True` value in one of these cases:
+Thus, there is a `BoolParser` that casts value to `True` in one of these cases:
 * variable is subclass of `str` and it's value one of (in any case):
   * `"yes"`
   * `"true"`
   * `"1"`
   * `"on"`
-* variable is numeric, and it's value is `1` (or `1.0`)
+* in other cases default `bool` call used
 
 ```python
-from config_manager.variable_parsers import BoolType
+from config_manager.variable_parsers import BoolParser
 
-assert BoolType("yes") == True
-assert BoolType("yES") == True
-assert BoolType("tRuE") == True
-assert BoolType("1") == True
-assert BoolType("on") == True
+parser = BoolParser()
 
-assert BoolType("no") == False
-assert BoolType("FaLsE") == False
+assert parser("yes") == True
+assert parser("yES") == True
+assert parser("tRuE") == True
+assert parser("1") == True
+assert parser("on") == True
 
-assert BoolType(1.0) == True
-assert BoolType(0.0) == False
-assert BoolType(1) == True
-assert BoolType(0) == False
-assert BoolType(True) == True
-assert BoolType(False) == False
+assert parser("no") == False
+assert parser("FaLsE") == False
+
+assert parser(1.0) == True
+assert parser(0.0) == False
+assert parser(1) == True
+assert parser(0) == False
+assert parser(True) == True
+assert parser(False) == False
 ```
 
 ### `ListType`
 
 As it is impossible to get type from `typing.List[T]`
 (plus this annotation removed in Python 3.9) there is a `ListType`.
-It can be used with any of primitives, so every element will be cast
-to primitive's type. For example:
+It can be used with any parseable type, so every element will be cast
+to target type. For example:
 
 ```python
 from config_manager.variable_parsers import ListType
 
+# shallow lists
 assert ListType[int](["1", "2", "3"]) == [1, 2, 3]
 assert ListType[str]([1.0, -213.5122, 52.123]) == ["1.0", "-213.5122", "52.123"]
+assert ListType[int]("[1, 2, 3]") == [1, 2, 3]
 ```
 
 All the parse sources provide different ways to define list, so there they are:
 * in `predefine` and `json` case simply assign any python list to variable
-* in `environment` case provide list separated by comma without spaces, like `my_cool_list=hello,world,ough`
-* in `argument` case put list items separated by spaces after variable name, like `--cool_list 1 2 3 1123`
+* in `environment` and `argument` cases every list is parsed from string `[item_1, item_2, ...]`

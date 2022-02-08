@@ -17,6 +17,10 @@ class ListConfig(Config):
     bool_array: ListType[bool]
 
 
+def _list_to_str(data: list) -> str:
+    return "[" + ",".join(map(str, data)) + "]"
+
+
 class TestListTypes(BaseTest):
     """Test case for list parsers"""
 
@@ -40,7 +44,7 @@ class TestListTypes(BaseTest):
     @staticmethod
     def _append_to_env(environ, name: str, value):
         if isinstance(value, list):
-            env_value = "[" + ",".join(map(str, value)) + "]"
+            env_value = _list_to_str(value)
         else:
             env_value = str(value)
 
@@ -50,7 +54,6 @@ class TestListTypes(BaseTest):
     def _append_to_argv(argv: list, name: str, value: Any):
         argv.append(f"--{name}")
         if isinstance(value, list):
-            for item in value:
-                argv.append(str(item))
+            argv.append(_list_to_str(value))
         else:
             argv.append(f"{value}")
